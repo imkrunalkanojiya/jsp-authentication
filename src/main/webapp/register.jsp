@@ -20,7 +20,8 @@
 					<h1
 						class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
 						Create an account</h1>
-					<form id="register-user" class="space-y-4 md:space-y-6" method="post">
+					<form id="register-user" class="space-y-4 md:space-y-6"
+						method="post">
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							<div>
 								<label for="first-name"
@@ -109,12 +110,11 @@
 	<script>
 		$(document).ready(function() {
 
-			$("register-user").submit(function(event) {
-
+			$("#register-user").submit(function(event) {
 				event.preventDefault();
 
-				let password = $("password").val();
-				let confirmPassword = $("confirm-password").val();
+				let password = $("#password").val();
+				let confirmPassword = $("#confirm-password").val();
 
 				// Password validation
 				if (password !== confirmPassword) {
@@ -125,41 +125,21 @@
 				}
 
 				// Register User via AJAX
-				
 				$.ajax({
-					
-					type:"POST",
-					url:"register",
-					data:$(this).serialize(),
-					success:function(response){
-						
-						/* if(response === "success"){
-							
-							alert("Registration Successful!");
-						
-						}else if(response === "emailExists"){
-							
-							alert("Email Already Exists");
-							
-						}else{
-							
-							alert("Error " + response);
-							
-						} */
-						
-						console.log(response)
-						
+					type : "POST",
+					url : "register", // Correct URL to match servlet mapping
+					data : $(this).serialize(), // Serialize the form data
+					success : function(response) {
+						if(response){
+							window.location.replace("index.jsp");
+						}
 					},
-					error:function(error){
-						
-						alert("Error while processing the request.")
-						
+					error : function(error) {
+						alert("Error while processing the request.");
 					}
-					
-				})
-			})
-
-		})
+				});
+			});
+		});
 	</script>
 </body>
 </html>

@@ -1,30 +1,34 @@
 package com.jspauth.controllers;
 
-import com.jspauth.models.User;
-import com.jspauth.models.UserDAO;
+import com.jspauth.dao.Dao;
+import com.jspauth.models.Register;
 
-import jakarta.servlet.http.HttpServlet;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/register")
 public class RegisterController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServlet request, HttpServlet response) throws Exception {
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// Fetch Form Data
-
-		String firstName = request.getInitParameter("first-name");
-		String lastName = request.getInitParameter("last-name");
-		String email = request.getInitParameter("email");
-		String mobile = request.getInitParameter("mobile");
-		String address = request.getInitParameter("address");
-		String gender = request.getInitParameter("gender");
-		String password = request.getInitParameter("password");
+		String firstName = request.getParameter("first-name");
+		String lastName = request.getParameter("last-name");
+		String email = request.getParameter("email");
+		String mobile = request.getParameter("mobile");
+		String address = request.getParameter("address");
+		String gender = request.getParameter("gender");
+		String password = request.getParameter("password");
 
 		// Set UserData to User Model
-
-		User user = new User();
-
+		Register user = new Register();
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(email);
@@ -33,14 +37,16 @@ public class RegisterController extends HttpServlet {
 		user.setGender(gender);
 		user.setPassword(password);
 
-		UserDAO dao = new UserDAO();
-
-		if (dao.registerUser(user)) {
-			System.out.println("User Registred Controller");
-		} else {
-			System.out.println("User not able to register from DAO");
+		// Assume the registration is not successful initially
+		try {
+			int status = Dao.registerUser(user);
+			if(status > 0) {				
+				response.sendRedirect("login.jsp");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		
 	}
-
 }
